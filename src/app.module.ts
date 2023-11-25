@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './modules/users/users.module';
-import { DatabaseModule } from './shared/database/database.module';
-import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
+
+import { DatabaseModule } from './shared/database/database.module';
 import { AuthGuard } from './modules/auth/auth.guard';
-// import { JwtModule } from '@nestjs/jwt';
-// import { env } from './shared/config/env';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
-  imports: [UsersModule, DatabaseModule, AuthModule],
+  imports: [UsersModule, DatabaseModule, AuthModule, CategoriesModule],
   controllers: [],
   providers: [
     {

@@ -95,7 +95,13 @@ export class TransactionsService {
     return newTransaction;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  async remove(userId: string, transactionId: string) {
+    await this.validateEntitiesOwnership({ userId, transactionId });
+
+    await this.transactionsRepo.delete({
+      where: { id: transactionId, userId },
+    });
+
+    return null;
   }
 }

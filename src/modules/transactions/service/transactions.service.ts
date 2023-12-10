@@ -5,6 +5,7 @@ import { TransactionsRepository } from 'src/shared/database/repositories/transac
 import { BankAccountOwnerShipValidation } from 'src/modules/bank-accounts/service/bank-account-ownership.service';
 import { ValidateCategoriesOwnership } from 'src/modules/categories/service/validate-categories-ownership.service';
 import { EntitiesOwnership } from '../types/EntitiesOwnership';
+import { ValidateTransactionOwnership } from './validate-transaction-ownership.service';
 
 @Injectable()
 export class TransactionsService {
@@ -12,6 +13,7 @@ export class TransactionsService {
     private readonly transactionsRepo: TransactionsRepository,
     private readonly validateBankAccountOwnership: BankAccountOwnerShipValidation,
     private readonly validateCategoriesOwnership: ValidateCategoriesOwnership,
+    private readonly validateTransactionOwnership: ValidateTransactionOwnership,
   ) {}
 
   private async validateEntitiesOwnership({
@@ -25,6 +27,8 @@ export class TransactionsService {
         this.validateBankAccountOwnership.validate(userId, bankAccountId),
       categoryId &&
         this.validateCategoriesOwnership.validate(userId, categoryId),
+      transactionId &&
+        this.validateTransactionOwnership.validate(userId, transactionId),
     ]);
   }
 
@@ -61,8 +65,34 @@ export class TransactionsService {
     return `This action returns a #${id} transaction`;
   }
 
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
+  async update(
+    userId: string,
+    transactionId: string,
+    updateTransactionDto: UpdateTransactionDto,
+  ) {
+    const { name, value, date, type, bankAccountId, categoryId } =
+      updateTransactionDto;
+
+    await this.validateEntitiesOwnership({
+      userId,
+      bankAccountId,
+      categoryId,
+      transactionId,
+    });
+
+    const newTransaction = await this.transactionsRepo.update({
+      where: { id: transactionId, userId },
+      data: {
+        name,
+        value,
+        date: new Date(date),
+        type,
+        bankAccountId,
+        categoryId,
+      },
+    });
+
+    return newTransaction;
   }
 
   remove(id: number) {

@@ -3,6 +3,7 @@ import { PrismaService } from './prisma.service';
 import { UsersRepositories } from './repositories/users.repository';
 import { CategoriesRepository } from './repositories/categories.repository';
 import { BankAccountsRepository } from './repositories/bank-accounts.repositories';
+import { TransactionsRepository } from './repositories/transaction.repositories';
 
 @Global()
 @Module({
@@ -11,7 +12,13 @@ import { BankAccountsRepository } from './repositories/bank-accounts.repositorie
     UsersRepositories,
     CategoriesRepository,
     BankAccountsRepository,
+    TransactionsRepository,
   ],
-  exports: [UsersRepositories, CategoriesRepository, BankAccountsRepository],
+  exports: [
+    UsersRepositories,
+    CategoriesRepository,
+    BankAccountsRepository,
+    TransactionsRepository,
+  ],
 })
 export class DatabaseModule {}

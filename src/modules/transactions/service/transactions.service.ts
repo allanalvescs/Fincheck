@@ -6,6 +6,7 @@ import { BankAccountOwnerShipValidation } from 'src/modules/bank-accounts/servic
 import { ValidateCategoriesOwnership } from 'src/modules/categories/service/validate-categories-ownership.service';
 import { EntitiesOwnership } from '../types/EntitiesOwnership';
 import { ValidateTransactionOwnership } from './validate-transaction-ownership.service';
+import { EnumTransactionType } from '../entities/transaction.entity';
 
 @Injectable()
 export class TransactionsService {
@@ -57,8 +58,26 @@ export class TransactionsService {
     return transaction;
   }
 
-  findAll(userId: string) {
-    return this.transactionsRepo.findAll({ where: { userId } });
+  findAll(
+    userId: string,
+    filters: {
+      month: number;
+      year: number;
+      bankAccountId?: string;
+      type?: EnumTransactionType;
+    },
+  ) {
+    return this.transactionsRepo.findAll({
+      where: {
+        userId,
+        bankAccountId: filters.bankAccountId,
+        type: filters.type,
+        date: {
+          gte: new Date(Date.UTC(filters.year, filters.month)),
+          lt: new Date(Date.UTC(filters.year, filters.month + 1)),
+        },
+      },
+    });
   }
 
   findOne(id: number) {

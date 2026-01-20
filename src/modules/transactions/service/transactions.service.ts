@@ -100,7 +100,7 @@ export class TransactionsService {
     });
 
     const newTransaction = await this.transactionsRepo.update({
-      where: { id: transactionId, userId },
+      where: { id: transactionId },
       data: {
         name,
         value,
@@ -118,7 +118,7 @@ export class TransactionsService {
     await this.validateEntitiesOwnership({ userId, transactionId });
 
     await this.transactionsRepo.delete({
-      where: { id: transactionId, userId },
+      where: { id: transactionId },
     });
 
     return null;

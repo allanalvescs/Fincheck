@@ -1,2 +1,10 @@
 {
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.activityBar.iconClickBehavior": "focus",
+    "workbench.colorTheme": "Dracula Theme Soft",
+    "material-icon-theme.activeIconPack": "nest",
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma",
+        "editor.formatOnSave": true
+    }
 }

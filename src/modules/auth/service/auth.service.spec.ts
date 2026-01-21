@@ -6,7 +6,6 @@ import { SigninDto } from "../dto/authenticate.dto";
 import * as bcrypt from "bcryptjs";
 import { ConflictException, UnauthorizedException } from "@nestjs/common";
 import { SignupDto } from "../dto/create-user.dto";
-import { create } from "domain";
 
 describe("Suite Test AuthService", () => {
     let service: AuthService;
@@ -15,7 +14,7 @@ describe("Suite Test AuthService", () => {
 
 
     // Mocks
-    const mockUseRepo = {
+    const mockUserRepo = {
         findByEmail: jest.fn(),
         create: jest.fn(),
     };
@@ -23,15 +22,15 @@ describe("Suite Test AuthService", () => {
     const mockJwtService = {
         signAsync: jest.fn(),
     };
+
     beforeEach(async () => {
-        jest.mock("bcryptjs");
 
         const module = await Test.createTestingModule({
             providers: [
                 AuthService,
                 {
                     provide: UsersRepositories,
-                    useValue: mockUseRepo
+                    useValue: mockUserRepo
                 },
                 {
                     provide: JwtService,
@@ -66,7 +65,7 @@ describe("Suite Test AuthService", () => {
                 name: "Jonh Doe"
             };
 
-            mockUseRepo.findByEmail.mockResolvedValue(resolvedUser);
+            mockUserRepo.findByEmail.mockResolvedValue(resolvedUser);
             mockJwtService.signAsync.mockResolvedValue("valid-jwt-token");
             (jest.spyOn(bcrypt, "compare") as jest.Mock).mockResolvedValue(true);
 
@@ -86,13 +85,13 @@ describe("Suite Test AuthService", () => {
         it("should throw UnauthorizedException when user not found", async () => {
             // Arrange
             const singinDto: SigninDto ={ email: "nobody@gmail.com", password: "12345678" };
-            mockUseRepo.findByEmail.mockResolvedValue(null);
+            mockUserRepo.findByEmail.mockResolvedValue(null);
 
             // Act & Assert
             await expect(service.signin(singinDto)).rejects.toThrow(UnauthorizedException);
             await expect(service.signin(singinDto)).rejects.toThrow('email not found!');
 
-            expect(mockUseRepo.findByEmail).toHaveBeenCalledWith({ where: { email: singinDto.email }});
+            expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: singinDto.email }});
             expect(bcrypt.compare).not.toHaveBeenCalled();
             expect(mockJwtService.signAsync).not.toHaveBeenCalled();
         });
@@ -107,14 +106,14 @@ describe("Suite Test AuthService", () => {
                 name: "Allan Souza"
             }
 
-            mockUseRepo.findByEmail.mockResolvedValue(expectedUser);
+            mockUserRepo.findByEmail.mockResolvedValue(expectedUser);
             (jest.spyOn(bcrypt, "compare") as jest.Mock).mockResolvedValue(false);
             
             // Act & Assert
             await expect(service.signin(singinDto)).rejects.toThrow(UnauthorizedException);
             await expect(service.signin(singinDto)).rejects.toThrow('Invalid password!');
 
-            expect(mockUseRepo.findByEmail).toHaveBeenCalledWith({ where: { email: singinDto.email }});
+            expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: singinDto.email }});
             expect(bcrypt.compare).toHaveBeenCalledWith(singinDto.password, expectedUser.password);
             expect(mockJwtService.signAsync).not.toHaveBeenCalled();
         });
@@ -140,19 +139,19 @@ describe("Suite Test AuthService", () => {
                 password: "hashedPassword"
             };
 
-            mockUseRepo.findByEmail.mockResolvedValue(null);
-            mockUseRepo.create.mockResolvedValue(expectedUserCreate);
+            mockUserRepo.findByEmail.mockResolvedValue(null);
+            mockUserRepo.create.mockResolvedValue(expectedUserCreate);
             (jest.spyOn(bcrypt, "hash") as jest.Mock).mockResolvedValue("hashedPassword");
             mockJwtService.signAsync.mockResolvedValue("valid-jwt-token");
 
             // Act
             const result = await service.signup(signupDto);
-            const createCall = mockUseRepo.create.mock.calls[0][0];
+            const createCall = mockUserRepo.create.mock.calls[0][0];
 
             // Assert
-            expect(mockUseRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signupDto.email } });
+            expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signupDto.email } });
             expect(bcrypt.hash).toHaveBeenCalledWith(signupDto.password, 12);
-            expect(mockUseRepo.create).toHaveBeenCalledWith({
+            expect(mockUserRepo.create).toHaveBeenCalledWith({
                 data: {
                     name: signupDto.name,
                     email: signupDto.email,
@@ -175,7 +174,7 @@ describe("Suite Test AuthService", () => {
             expect(result).toEqual({ accessToken: "valid-jwt-token" });
         });
 
-        it("shoould be throw an error ConflictException when email is already in use", async () => {
+        it("shoould throw an error ConflictException when email is already in use", async () => {
             // Arrange
             const signupDto: SignupDto  = {
                 name: "Jonh Doe Duplicate",
@@ -190,16 +189,16 @@ describe("Suite Test AuthService", () => {
                 password: "hashedPassword"
             };
 
-            mockUseRepo.findByEmail.mockResolvedValue(existingUser);
+            mockUserRepo.findByEmail.mockResolvedValue(existingUser);
 
-            // Actt
+            // Act
             await expect(service.signup(signupDto)).rejects.toThrow(ConflictException);
             await expect(service.signup(signupDto)).rejects.toThrow("This email is already in used");
 
             // Assert
-            expect(mockUseRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signupDto.email } });
+            expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signupDto.email } });
             expect(bcrypt.hash).not.toHaveBeenCalled();
-            expect(mockUseRepo.create).not.toHaveBeenCalled();
+            expect(mockUserRepo.create).not.toHaveBeenCalled();
             expect(mockJwtService.signAsync).not.toHaveBeenCalled();
         });
     });

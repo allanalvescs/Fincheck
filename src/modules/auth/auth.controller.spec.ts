@@ -26,7 +26,7 @@ describe("Suite Test AuthController", () => {
         authService = module.get<AuthService>(AuthService);
     });
 
-    describe('signin', () => {
+    describe('signin method test', () => {
         it('should call authService.signin with correct params', async () => {
             const signinDto: SigninDto = { email: 'test@example.com', password: '123456' };
             const expectedResult = { accessToken: 'token' };
@@ -40,7 +40,7 @@ describe("Suite Test AuthController", () => {
         });
     });
 
-    describe('siginup', () => {
+    describe('siginup method test', () => {
         it('should call authService.signup with correct params', async () => {
             const signupDto: SignupDto = { name: 'Test', email: 'test@example.com', password: '123456' };
             const expectedResult = { accessToken: 'token' }

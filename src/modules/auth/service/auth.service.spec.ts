@@ -88,8 +88,9 @@ describe("Suite Test AuthService", () => {
             mockUserRepo.findByEmail.mockResolvedValue(null);
 
             // Act & Assert
-            await expect(service.signin(signinDto)).rejects.toThrow(UnauthorizedException);
-            await expect(service.signin(signinDto)).rejects.toThrow('email not found!');
+            const signinPromise = service.signin(signinDto);
+            await expect(signinPromise).rejects.toThrow(UnauthorizedException);
+            await expect(signinPromise).rejects.toThrow('email not found!');
 
             expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signinDto.email }});
             expect(bcrypt.compare).not.toHaveBeenCalled();
@@ -98,7 +99,7 @@ describe("Suite Test AuthService", () => {
 
         it("should throw UnauthorizedException when password is invalid", async () => {
             // Arrange
-            const signinDto: SigninDto ={ email: "allan@gmail.com", password: "12345678" };
+            const signinDto: SigninDto = { email: "allan@gmail.com", password: "12345678" };
             const expectedUser = {
                 id: "user-uuid",
                 email: signinDto.email,
@@ -110,8 +111,9 @@ describe("Suite Test AuthService", () => {
             (jest.spyOn(bcrypt, "compare") as jest.Mock).mockResolvedValue(false);
             
             // Act & Assert
-            await expect(service.signin(signinDto)).rejects.toThrow(UnauthorizedException);
-            await expect(service.signin(signinDto)).rejects.toThrow('Invalid password!');
+            const signinPromise = service.signin(signinDto);
+            await expect(signinPromise).rejects.toThrow(UnauthorizedException);
+            await expect(signinPromise).rejects.toThrow('Invalid password!');
 
             expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signinDto.email }});
             expect(bcrypt.compare).toHaveBeenCalledWith(signinDto.password, expectedUser.password);
@@ -192,8 +194,9 @@ describe("Suite Test AuthService", () => {
             mockUserRepo.findByEmail.mockResolvedValue(existingUser);
 
             // Act
-            await expect(service.signup(signupDto)).rejects.toThrow(ConflictException);
-            await expect(service.signup(signupDto)).rejects.toThrow("This email is already in used");
+            const signupPromise = service.signup(signupDto);
+            await expect(signupPromise).rejects.toThrow(ConflictException);
+            await expect(signupPromise).rejects.toThrow("This email is already in used");
 
             // Assert
             expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signupDto.email } });

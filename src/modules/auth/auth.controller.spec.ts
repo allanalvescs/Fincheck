@@ -40,14 +40,14 @@ describe("Suite Test AuthController", () => {
         });
     });
 
-    describe('siginup method test', () => {
+    describe('signup method test', () => {
         it('should call authService.signup with correct params', async () => {
             const signupDto: SignupDto = { name: 'Test', email: 'test@example.com', password: '123456' };
-            const expectedResult = { accessToken: 'token' }
+            const expectedResult = { accessToken: 'token' };
 
-            jest.spyOn(authService, 'signup').mockResolvedValue(expectedResult)
+            jest.spyOn(authService, 'signup').mockResolvedValue(expectedResult);
             
-            const result = await controller.siginup(signupDto)
+            const result = await controller.siginup(signupDto);
             
             expect(authService.signup).toHaveBeenCalledWith(signupDto);
             expect(result).toEqual(expectedResult);

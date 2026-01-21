@@ -8,7 +8,7 @@ describe("Suite Test AuthController", () => {
     let controller: AuthController;
     let authService: AuthService;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         const module = await Test.createTestingModule({
             controllers: [AuthController],
             providers: [

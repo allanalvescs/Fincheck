@@ -88,8 +88,9 @@ describe("Suite Test AuthService", () => {
             mockUserRepo.findByEmail.mockResolvedValue(null);
 
             // Act & Assert
-            await expect(service.signin(signinDto)).rejects.toThrow(UnauthorizedException);
-            await expect(service.signin(signinDto)).rejects.toThrow('email not found!');
+            const promise = service.signin(signinDto);
+            await expect(promise).rejects.toThrow(UnauthorizedException);
+            await expect(promise).rejects.toThrow('email not found!');
 
             expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signinDto.email }});
             expect(bcrypt.compare).not.toHaveBeenCalled();
@@ -110,8 +111,9 @@ describe("Suite Test AuthService", () => {
             (jest.spyOn(bcrypt, "compare") as jest.Mock).mockResolvedValue(false);
             
             // Act & Assert
-            await expect(service.signin(signinDto)).rejects.toThrow(UnauthorizedException);
-            await expect(service.signin(signinDto)).rejects.toThrow('Invalid password!');
+            const promise = service.signin(signinDto);
+            await expect(promise).rejects.toThrow(UnauthorizedException);
+            await expect(promise).rejects.toThrow('Invalid password!');
 
             expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signinDto.email }});
             expect(bcrypt.compare).toHaveBeenCalledWith(signinDto.password, expectedUser.password);

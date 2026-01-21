@@ -105,7 +105,7 @@ describe("Suite Test AuthService", () => {
                 email: signinDto.email,
                 password: "hashedPassword",
                 name: "Allan Souza"
-            }
+            };
 
             mockUserRepo.findByEmail.mockResolvedValue(expectedUser);
             (jest.spyOn(bcrypt, "compare") as jest.Mock).mockResolvedValue(false);
@@ -196,7 +196,7 @@ describe("Suite Test AuthService", () => {
             // Act
             const signupPromise = service.signup(signupDto);
             await expect(signupPromise).rejects.toThrow(ConflictException);
-            await expect(signupPromise).rejects.toThrow("This email is already in used");
+            await expect(signupPromise).rejects.toThrow("This email is already in use");
 
             // Assert
             expect(mockUserRepo.findByEmail).toHaveBeenCalledWith({ where: { email: signupDto.email } });

@@ -47,7 +47,7 @@ describe("Suite Test AuthController", () => {
 
             jest.spyOn(authService, 'signup').mockResolvedValue(expectedResult);
             
-            const result = await controller.siginup(signupDto);
+            const result = await controller.signup(signupDto);
             
             expect(authService.signup).toHaveBeenCalledWith(signupDto);
             expect(result).toEqual(expectedResult);

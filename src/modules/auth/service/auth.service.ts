@@ -3,11 +3,11 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { SigninDto } from './dto/authenticate.dto';
-import { UsersRepositories } from 'src/shared/database/repositories/users.repository';
+import { SigninDto } from '../dto/authenticate.dto';
+import { UsersRepositories } from '../../../shared/database/repositories/users.repository';
 import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { SignupDto } from './dto/create-user.dto';
+import { SignupDto } from '../dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,13 +24,13 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials.');
+      throw new UnauthorizedException('email not found!');
     }
 
     const isPasswordValid = await compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials.');
+      throw new UnauthorizedException('Invalid password!');
     }
 
     // Generate JWT (JSON web Token)

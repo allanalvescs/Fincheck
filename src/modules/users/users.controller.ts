@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { ActiveUserId } from 'src/shared/decorators/ActiveUserId';
+import { UsersService } from './service/users.service';
+import { ActiveUserId } from '../../shared/decorators/ActiveUserId';
 
 @Controller('users')
 export class UsersController {

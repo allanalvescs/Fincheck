@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { UsersRepositories } from 'src/shared/database/repositories/users.repository';
+import { UsersRepositories } from '../../../shared/database/repositories/users.repository';
 
 @Injectable()
 export class UsersService {

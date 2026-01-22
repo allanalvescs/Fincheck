@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateBankAccountDto } from '../dto/create-bank-account.dto';
 import { UpdateBankAccountDto } from '../dto/update-bank-account.dto';
-import { BankAccountsRepository } from 'src/shared/database/repositories/bank-accounts.repositories';
-import { BankAccountOwnerShipValidation } from './bank-account-ownership.service';
+import { BankAccountsRepository } from '../../../shared/database/repositories/bank-accounts.repositories';
+import { BankAccountOwnerShipValidation } from '../validation/bank-account-ownership.service';
 
 @Injectable()
 export class BankAccountsService {
@@ -11,8 +11,17 @@ export class BankAccountsService {
     private readonly bankAccountOwnerShipValidation: BankAccountOwnerShipValidation,
   ) {}
 
-  create(userId: string, createBankAccountDto: CreateBankAccountDto) {
+  async create(userId: string, createBankAccountDto: CreateBankAccountDto) {
     const { name, type, initialBalance, color } = createBankAccountDto;
+
+    const bankAccount = await this.bankAccountRepo.findFirst({ 
+      where: { name, userId }
+     });
+
+    if (bankAccount) {
+      throw new ConflictException('Bank account with the same name already exists');
+    }
+
     return this.bankAccountRepo.create({
       data: {
         name,
@@ -68,7 +77,7 @@ export class BankAccountsService {
 
     const { name, initialBalance, type, color } = updateBankAccountDto;
 
-    const newBankAccount = this.bankAccountRepo.update({
+    const newBankAccount = await this.bankAccountRepo.update({
       where: { id: bankAccountId},
       data: {
         name,

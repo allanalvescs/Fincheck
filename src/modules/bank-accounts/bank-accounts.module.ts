@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BankAccountsService } from './service/bank-accounts.service';
-import { BankAccountOwnerShipValidation } from './service/bank-account-ownership.service';
+import { BankAccountOwnerShipValidation } from './validation/bank-account-ownership.service';
 import { BankAccountsController } from './bank-accounts.controller';
 
 @Module({

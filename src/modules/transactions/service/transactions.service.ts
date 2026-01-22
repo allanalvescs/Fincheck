@@ -3,7 +3,7 @@ import { CreateTransactionDto } from '../dto/create-transaction.dto';
 import { UpdateTransactionDto } from '../dto/update-transaction.dto';
 import { TransactionsRepository } from 'src/shared/database/repositories/transaction.repositories';
 import { BankAccountOwnerShipValidation } from 'src/modules/bank-accounts/validation/bank-account-ownership.service';
-import { ValidateCategoriesOwnership } from 'src/modules/categories/service/validate-categories-ownership.service';
+import { ValidateCategoriesOwnership } from 'src/modules/categories/validation/validate-categories-ownership.validation';
 import { EntitiesOwnership } from '../types/EntitiesOwnership';
 import { ValidateTransactionOwnership } from './validate-transaction-ownership.service';
 import { EnumTransactionType } from '../entities/transaction.entity';

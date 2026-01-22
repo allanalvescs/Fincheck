@@ -1,5 +1,5 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CategoriesRepository } from 'src/shared/database/repositories/categories.repository';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CategoriesRepository } from '../../../shared/database/repositories/categories.repository';
 
 @Injectable()
 export class ValidateCategoriesOwnership {
@@ -11,7 +11,7 @@ export class ValidateCategoriesOwnership {
     });
 
     if (!isOwner) {
-      throw new UnauthorizedException('Category account not found.');
+      throw new NotFoundException('Category account not found.');
     }
   }
 }

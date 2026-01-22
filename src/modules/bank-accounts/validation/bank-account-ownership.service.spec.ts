@@ -1,4 +1,4 @@
-import { UnauthorizedException } from "@nestjs/common";
+import { NotFoundException } from "@nestjs/common";
 import { BankAccountsRepository } from "../../../shared/database/repositories/bank-accounts.repositories";
 import { BankAccountOwnerShipValidation } from "./bank-account-ownership.service";
 import { Test } from "@nestjs/testing";
@@ -50,10 +50,10 @@ describe("Suite Test BankAccountOwnershipValidation", () => {
             expect(bankAccountsRepository.findFirst).toHaveBeenCalledWith({
                 where: { id: bankAccountId, userId },
             });
-            expect(validation.validate(userId, bankAccountId)).resolves.not.toThrow(UnauthorizedException);
+            expect(validation.validate(userId, bankAccountId)).resolves.not.toThrow(NotFoundException);
         });
 
-        it("Should throw UnauthorizedException, bank account not found", async () => {
+        it("Should throw NotFoundException, bank account not found", async () => {
             // Arrange
             const userId = "user-id";
             const bankAccountId = "bank-account-id";
@@ -62,7 +62,7 @@ describe("Suite Test BankAccountOwnershipValidation", () => {
 
             // Act & Assert
             const validationPromise = validation.validate(userId, bankAccountId);
-            await expect(validationPromise).rejects.toThrow(UnauthorizedException);
+            await expect(validationPromise).rejects.toThrow(NotFoundException);
             await expect(validationPromise).rejects.toThrow('Bank account not found.');
             
             expect(mockBankAccountsRepository.findFirst).toHaveBeenCalledWith({

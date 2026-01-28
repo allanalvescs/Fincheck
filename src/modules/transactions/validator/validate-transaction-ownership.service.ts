@@ -1,5 +1,5 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { TransactionsRepository } from 'src/shared/database/repositories/transaction.repositories';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { TransactionsRepository } from '../../../shared/database/repositories/transaction.repositories';
 
 @Injectable()
 export class ValidateTransactionOwnership {
@@ -11,7 +11,7 @@ export class ValidateTransactionOwnership {
     });
 
     if (!isOwner) {
-      throw new UnauthorizedException('Transaction not found.');
+      throw new NotFoundException('Transaction not found.');
     }
   }
 }

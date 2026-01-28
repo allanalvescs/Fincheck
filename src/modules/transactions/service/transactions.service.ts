@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from '../dto/create-transaction.dto';
 import { UpdateTransactionDto } from '../dto/update-transaction.dto';
-import { TransactionsRepository } from 'src/shared/database/repositories/transaction.repositories';
-import { BankAccountOwnerShipValidation } from 'src/modules/bank-accounts/validation/bank-account-ownership.service';
-import { ValidateCategoriesOwnership } from 'src/modules/categories/validation/validate-categories-ownership.validation';
+import { TransactionsRepository } from '../../../shared/database/repositories/transaction.repositories';
+import { BankAccountOwnerShipValidation } from '../../../modules/bank-accounts/validation/bank-account-ownership.service';
+import { ValidateCategoriesOwnership } from '../../../modules/categories/validation/validate-categories-ownership.validation';
 import { EntitiesOwnership } from '../types/EntitiesOwnership';
-import { ValidateTransactionOwnership } from './validate-transaction-ownership.service';
+import { ValidateTransactionOwnership } from '../validator/validate-transaction-ownership.service';
 import { EnumTransactionType } from '../entities/transaction.entity';
 
 @Injectable()
@@ -23,14 +23,11 @@ export class TransactionsService {
     categoryId,
     transactionId,
   }: EntitiesOwnership) {
-    return await Promise.all([
-      bankAccountId &&
-        this.validateBankAccountOwnership.validate(userId, bankAccountId),
-      categoryId &&
-        this.validateCategoriesOwnership.validate(userId, categoryId),
-      transactionId &&
-        this.validateTransactionOwnership.validate(userId, transactionId),
-    ]);
+    await this.validateBankAccountOwnership.validate(userId, bankAccountId);
+    
+    await this.validateCategoriesOwnership.validate(userId, categoryId); 
+    
+    await this.validateTransactionOwnership.validate(userId, transactionId);
   }
 
   async create(userId: string, createTransactionDto: CreateTransactionDto) {

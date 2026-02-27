@@ -173,7 +173,7 @@ describe("Suite Test BankAccountsService", () => {
                     initialBalance: 0,
                     color: "#333333",
                     userId,
-                    currenteBalance: 700,
+                    currentBalance: 700,
                 },
                 {
                     id: "bank-account-id-2",
@@ -182,7 +182,7 @@ describe("Suite Test BankAccountsService", () => {
                     initialBalance: 2000,
                     color: "#444444",
                     userId,
-                    currenteBalance: 2700,
+                    currentBalance: 2700,
                 },
             ]);
             expect(result).toHaveLength(result.length);

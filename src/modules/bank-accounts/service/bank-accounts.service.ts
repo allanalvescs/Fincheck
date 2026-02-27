@@ -59,8 +59,8 @@ export class BankAccountsService {
         0,
       );
 
-      const currenteBalance = bankAccount.initialBalance + totalTransactions;
-      return { currenteBalance, ...bankAccount };
+      const currentBalance = bankAccount.initialBalance + totalTransactions;
+      return { currentBalance, ...bankAccount };
     });
   }
 

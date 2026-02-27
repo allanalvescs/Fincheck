@@ -21,14 +21,11 @@ export class TransactionsService {
     userId,
     bankAccountId,
     categoryId,
-    transactionId,
   }: EntitiesOwnership) {
     await this.validateBankAccountOwnership.validate(userId, bankAccountId);
     
     await this.validateCategoriesOwnership.validate(userId, categoryId); 
-    
-    await this.validateTransactionOwnership.validate(userId, transactionId);
-  }
+   }
 
   async create(userId: string, createTransactionDto: CreateTransactionDto) {
     const { name, value, date, type, bankAccountId, categoryId } =
@@ -95,6 +92,8 @@ export class TransactionsService {
       categoryId,
       transactionId,
     });
+
+    await this.validateTransactionOwnership.validate(userId, transactionId);
 
     const newTransaction = await this.transactionsRepo.update({
       where: { id: transactionId },

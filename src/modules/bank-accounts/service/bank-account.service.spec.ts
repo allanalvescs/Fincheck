@@ -4,7 +4,6 @@ import { BankAccountsRepository } from "../../../shared/database/repositories/ba
 import { BankAccountOwnerShipValidation } from "../validation/bank-account-ownership.service";
 import { CreateBankAccountDto } from "../dto/create-bank-account.dto";
 import { BankAccountTypeEnum } from "../entities/bank-account.entity";
-import { mock } from "node:test";
 import { ConflictException, NotFoundException } from "@nestjs/common";
 import { UpdateBankAccountDto } from "../dto/update-bank-account.dto";
 

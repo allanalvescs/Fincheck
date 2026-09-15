@@ -170,6 +170,11 @@ describe("Suite Test TransactionsService", () => {
             lt: new Date(Date.UTC(filters.year, filters.month + 1)),
           },
         },
+        include: {
+          category: {
+            select: { id: true, name: true, icon: true },
+          },
+        },
       });
     });
   });
@@ -279,6 +284,7 @@ describe("Suite Test TransactionsService", () => {
       
       mockValidateCategoriesOwnership.validate.mockResolvedValue(undefined);
       mockValidateTransactionOwnership.validate.mockRejectedValue(new NotFoundException("Transaction not found."));
+      
       // Act & Assert
       const promiseRemoveTransaction = service.remove(userId, transactionId);
       await expect(promiseRemoveTransaction).rejects.toThrow("Transaction not found.");
